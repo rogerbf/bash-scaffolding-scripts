@@ -18,13 +18,11 @@ nodeproject () {
   # default folders & files
   mkdir src
   echo "module.exports = {}" >> src/index.js
-  echo "
-  const test = require('tape')
-  test('A passing test.', assert => {
-    assert.pass('This test will pass.')
-    assert.end()
-  })
-  " >> src/index.test.js
+  echo "const test = require('tape')" >> src/index.test.js
+  echo "test('A passing test.', assert => {" >> src/index.test.js
+  echo "  assert.pass('This test will pass.')" >> src/index.test.js
+  echo "  assert.end()" >> src/index.test.js
+  echo "})" >> src/index.test.js
 
   # package.json
   npm init -y
