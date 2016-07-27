@@ -75,7 +75,25 @@ nodeproject () {
       fs.writeFileSync('./package.json', JSON.stringify(package, null, 2))
       "
       ;;
+
+      (binary)
+      # files & folders
+      mkdir src/bin
+      echo "#!/usr/bin/env node" >> src/bin/cli.js
+
+      # package.json
+      node -e "
+      const fs = require('fs')
+      const package = JSON.parse(fs.readFileSync('./package.json'))
+      const bin = {}
+      bin[package.name] = './dist/bin/cli.js'
+      package.bin = bin
+      fs.writeFileSync('./package.json', JSON.stringify(package, null, 2))
+      "
+      ;;
     esac
     ;;
   esac
 }
+
+# add bin
