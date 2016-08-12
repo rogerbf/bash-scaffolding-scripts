@@ -43,7 +43,7 @@ nodeproject () {
       package.eslintConfig = eslintConfig
       package.babel = babel
       package.dependencies = {}
-      package.scripts['test'] = 'echo \'tests not available\''
+      package.scripts['test'] = 'echo \'no tests\''
       package.scripts['prebuild'] = 'npm test && rimraf dist'
       package.scripts['build'] = 'babel --ignore *.test.js --out-dir dist src'
       package.scripts['prepublish'] = 'npm run build'
