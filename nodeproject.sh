@@ -23,7 +23,7 @@ nodeproject () {
 
       # package.json
       npm init -y
-      npm i --save-dev babel-cli babel-preset-es2015 rimraf
+      npm i --save-dev babel-cli babel-preset-es2015 rimraf nodemon
       node -e "
       const eslintConfig = {
       env: {
@@ -48,6 +48,8 @@ nodeproject () {
       package.scripts['prebuild'] = 'npm test && rimraf dist'
       package.scripts['build'] = 'babel --ignore *.test.js --out-dir dist src'
       package.scripts['prepublish'] = 'npm run build'
+      package.scripts['start'] = 'npm run build && node ./dist/index.js'
+      package.scripts['start:watch'] = 'nodemon --watch src -x npm run start'
       fs.writeFileSync('./package.json', JSON.stringify(package, null, 2))
       "
 
