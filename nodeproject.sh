@@ -27,11 +27,14 @@ nodeproject () {
       node -e "
       const eslintConfig = {
       env: {
-        node: true
+        node: true,
       },
       parserOptions: {
         ecmaVersion: 6,
         sourceType: 'module'
+      },
+      rules: {
+        quotes: ['error', 'backtick']
       }
       }
       const babel = {
