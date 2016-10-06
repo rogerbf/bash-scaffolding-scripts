@@ -69,6 +69,7 @@ nodeproject () {
       package.scripts['start'] = 'npm run build && node ./dist/index.js'
       package.scripts['start:watch'] = 'nodemon --watch src -x npm run start'
       package.scripts['eslint:fix'] = 'eslint --fix src'
+      package.scripts['repl'] = 'npm run build && babel-node'
       fs.writeFileSync('./package.json', JSON.stringify(package, null, 2))
       "
 
