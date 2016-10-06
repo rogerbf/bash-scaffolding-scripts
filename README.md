@@ -2,7 +2,7 @@
 
 ## Node.js scaffolding
 
-Initialize a new Node.js project with transpilation provided by Babel using babel-preset-es2015:
+Initialize a new Node.js project with transpilation provided by Babel using babel-preset-es2015, babel-plugin-transform-es2015-destructuring, babel-plugin-transform-object-rest-spread:
 
 ``` bash
 nodeproject create [PROJECTNAME]

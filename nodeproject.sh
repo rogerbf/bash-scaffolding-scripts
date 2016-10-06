@@ -19,40 +19,56 @@ nodeproject () {
 
       # default files & folders
       mkdir src
-      echo "module.exports = {}" >> src/index.js
+      echo "export default {}" >> src/index.js
+
+      # .eslintrc.json
+      node -e "
+      const fs = require('fs')
+      const eslintConfig = {
+        env: {
+          node: true,
+        },
+        parserOptions: {
+          ecmaVersion: 6,
+          sourceType: 'module',
+          ecmaFeatures: {
+            experimentalObjectRestSpread: true
+          }
+        },
+        rules: {
+          quotes: ['error', 'backtick']
+        }
+      }
+      fs.writeFileSync('./.eslintrc.json', JSON.stringify(eslintConfig, null, 2))
+      "
+      echo "dist" >> .eslintignore
+
+      # .babelrc
+      node -e "
+      const fs = require('fs')
+      const babel = {
+        presets: ['es2015'],
+        plugins: ['transform-es2015-destructuring', 'transform-object-rest-spread', 'add-module-exports']
+      }
+      fs.writeFileSync('./.babelrc', JSON.stringify(babel, null, 2))
+      "
 
       # package.json
       npm init -y
-      npm i --save-dev babel-cli babel-preset-es2015 rimraf nodemon
+      npm i --save-dev babel-cli babel-preset-es2015 babel-plugin-transform-es2015-destructuring babel-plugin-transform-object-rest-spread babel-plugin-add-module-exports rimraf nodemon eslint
       node -e "
-      const eslintConfig = {
-      env: {
-        node: true,
-      },
-      parserOptions: {
-        ecmaVersion: 6,
-        sourceType: 'module'
-      },
-      rules: {
-        quotes: ['error', 'backtick']
-      }
-      }
-      const babel = {
-        presets: ['es2015']
-      }
       const fs = require('fs')
       const package = JSON.parse(fs.readFileSync('./package.json'))
       package.main = './dist/index.js'
       package.files = ['dist', 'README.md']
-      package.eslintConfig = eslintConfig
-      package.babel = babel
       package.dependencies = {}
       package.scripts['test'] = 'echo \'no tests\''
       package.scripts['prebuild'] = 'npm test && rimraf dist'
-      package.scripts['build'] = 'babel --ignore *.test.js --out-dir dist src'
+      package.scripts['build'] = 'babel --ignore *.test.* --out-dir dist src'
       package.scripts['prepublish'] = 'npm run build'
       package.scripts['start'] = 'npm run build && node ./dist/index.js'
       package.scripts['start:watch'] = 'nodemon --watch src -x npm run start'
+      package.scripts['eslint:fix'] = 'eslint --fix src'
       fs.writeFileSync('./package.json', JSON.stringify(package, null, 2))
       "
 
@@ -63,20 +79,22 @@ nodeproject () {
     (add)
     case $2 in
       (tests)
+      mkdir src/tests
       # index.test.js
-      echo "const test = require('tape')" >> src/index.test.js
-      echo "" >> src/index.test.js
-      echo "test('A passing test.', assert => {" >> src/index.test.js
-      echo "  assert.pass('This test will pass.')" >> src/index.test.js
-      echo "  assert.end()" >> src/index.test.js
-      echo "})" >> src/index.test.js
+      echo "import test from 'tape'" >> src/tests/index.test.js
+      echo "import app from '../index.js'" >> src/tests/index.test.js
+      echo "" >> src/tests/index.test.js
+      echo "test(\`A passing test.\`, assert => {" >> src/tests/index.test.js
+      echo "  assert.pass(\`This test will pass.\`)" >> src/tests/index.test.js
+      echo "  assert.end()" >> src/tests/index.test.js
+      echo "})" >> src/tests/index.test.js
 
       # package.json
-      npm i --save-dev faucet nodemon tape
+      npm i --save-dev tap-dot nodemon tape
       node -e "
       const fs = require('fs')
       const package = JSON.parse(fs.readFileSync('./package.json'))
-      package.scripts['test'] = 'babel-node ./src/index.test.js | faucet'
+      package.scripts['test'] = 'tape -r babel-register ./src/tests/*.js | tap-dot'
       package.scripts['watch:test'] = 'nodemon -x \'npm test\''
       fs.writeFileSync('./package.json', JSON.stringify(package, null, 2))
       "
@@ -101,5 +119,3 @@ nodeproject () {
     ;;
   esac
 }
-
-# add bin
