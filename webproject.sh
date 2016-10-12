@@ -75,7 +75,7 @@ webproject () {
       package.scripts['build:js:development'] = 'npm run babel && rollup --sourcemap inline --output build/development/bundle.js build/.babel/index.js',
       package.scripts['build:js:production'] = 'npm run babel && mkdirp build/production && rollup build/.babel/index.js | uglifyjs --mangle --compress --output build/production/bundle.js && rimraf build/.babel-output',
       package.scripts['build:html:development'] = 'html-minifier --file-ext html --input-dir source --output-dir build/development',
-      package.scripts['build:html:production'] = 'html-minifier --collapse-whitespace --remove-comments --file-ext html --input-dir source --output-dir build/production',
+      package.scripts['build:html:production'] = 'html-minifier --collapse-whitespace --remove-comments --minify-css --file-ext html --input-dir source --output-dir build/production',
       fs.writeFileSync('./package.json', JSON.stringify(package, null, 2))
       "
     fi
