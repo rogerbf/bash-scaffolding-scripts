@@ -47,15 +47,20 @@ nodeproject () {
       node -e "
       const fs = require('fs')
       const babel = {
-        presets: ['es2015'],
-        plugins: ['transform-es2015-destructuring', 'transform-object-rest-spread', 'add-module-exports']
+        presets: ['es2015', 'stage-3'],
+        plugins: ['add-module-exports'],
+        env: {
+          production: {
+            ignore: ['*.test.*']
+          }
+        }
       }
       fs.writeFileSync('./.babelrc', JSON.stringify(babel, null, 2))
       "
 
       # package.json
       npm init -y
-      npm i --save-dev babel-cli babel-preset-es2015 babel-plugin-transform-es2015-destructuring babel-plugin-transform-object-rest-spread babel-plugin-add-module-exports rimraf nodemon eslint
+      npm i --save-dev babel-cli babel-preset-es2015 babel-preset-stage-3 babel-plugin-add-module-exports rimraf nodemon eslint cross-env
       node -e "
       const fs = require('fs')
       const package = JSON.parse(fs.readFileSync('./package.json'))
@@ -64,10 +69,11 @@ nodeproject () {
       package.dependencies = {}
       package.scripts['test'] = 'echo \'no tests\''
       package.scripts['prebuild'] = 'npm test && rimraf dist'
-      package.scripts['build'] = 'babel --ignore *.test.* --out-dir dist src'
+      package.scripts['build'] = 'cross-env BABEL_ENV=production babel --out-dir dist src'
       package.scripts['prepublish'] = 'npm run build'
       package.scripts['start'] = 'npm run build && node ./dist/index.js'
       package.scripts['start:watch'] = 'nodemon --watch src -x npm run start'
+      package.scripts['eslint'] = 'eslint src'
       package.scripts['eslint:fix'] = 'eslint --fix src'
       package.scripts['repl'] = 'npm run build && babel-node'
       fs.writeFileSync('./package.json', JSON.stringify(package, null, 2))
@@ -83,19 +89,19 @@ nodeproject () {
       mkdir src/tests
       # index.test.js
       echo "import test from 'tape'" >> src/tests/index.test.js
-      echo "import app from '../index.js'" >> src/tests/index.test.js
+      echo "import * as lib from '../index.js'" >> src/tests/index.test.js
       echo "" >> src/tests/index.test.js
-      echo "test(\`A passing test.\`, assert => {" >> src/tests/index.test.js
-      echo "  assert.pass(\`This test will pass.\`)" >> src/tests/index.test.js
+      echo "test(\`lib\`, assert => {" >> src/tests/index.test.js
+      echo "  assert.ok(lib, \`exists\`)" >> src/tests/index.test.js
       echo "  assert.end()" >> src/tests/index.test.js
       echo "})" >> src/tests/index.test.js
 
       # package.json
-      npm i --save-dev tap-dot nodemon tape
+      npm i --save-dev tap-dot tape
       node -e "
       const fs = require('fs')
       const package = JSON.parse(fs.readFileSync('./package.json'))
-      package.scripts['test'] = 'tape -r babel-register ./src/tests/*.js | tap-dot'
+      package.scripts['test'] = 'tape -r babel-register ./src/**/*.test.js | tap-dot'
       package.scripts['watch:test'] = 'nodemon -x \'npm test\''
       fs.writeFileSync('./package.json', JSON.stringify(package, null, 2))
       "
