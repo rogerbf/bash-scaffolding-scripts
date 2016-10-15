@@ -1,6 +1,6 @@
 webproject () {
   case $1 in
-    (create)
+    (init)
     if !([ -z "$2" ]); then
       PROJECTNAME=$2
       echo $PROJECTNAME
@@ -61,7 +61,7 @@ webproject () {
 
       # dev-dependencies
       npm init -y
-      npm i --save-dev babel-cli babel-preset-es2015 babel-preset-stage-3 rimraf mkdirp html-minifier rollup uglify-js
+      npm i --save-dev babel-cli babel-preset-es2015 babel-preset-stage-3 rimraf mkdirp html-minifier rollup uglify-js browser-sync npm-run-all
 
       node -e "
       const fs = require('fs')
@@ -70,12 +70,14 @@ webproject () {
       package.dependencies = {}
       package.scripts['clean:development'] = 'rimraf build/development'
       package.scripts['clean:production'] = 'rimraf build/production'
-      package.scripts['clean:all'] = 'npm run clean:development & npm run clean:production'
+      package.scripts['clean:all'] = 'npm-run-all clean:development clean:production'
       package.scripts['babel'] = 'rimraf build/.babel && mkdirp build/.babel && babel --out-dir build/.babel source'
-      package.scripts['build:js:development'] = 'npm run babel && rollup --sourcemap inline --output build/development/bundle.js build/.babel/index.js',
-      package.scripts['build:js:production'] = 'npm run babel && mkdirp build/production && rollup build/.babel/index.js | uglifyjs --mangle --compress --output build/production/bundle.js && rimraf build/.babel-output',
-      package.scripts['build:html:development'] = 'html-minifier --file-ext html --input-dir source --output-dir build/development',
-      package.scripts['build:html:production'] = 'html-minifier --collapse-whitespace --remove-comments --minify-css --file-ext html --input-dir source --output-dir build/production',
+      package.scripts['build:development:js'] = 'npm run babel && rollup --sourcemap inline --output build/development/bundle.js build/.babel/index.js'
+      package.scripts['build:production:js'] = 'npm run babel && mkdirp build/production && rollup build/.babel/index.js | uglifyjs --mangle --compress --output build/production/bundle.js && rimraf build/.babel-output'
+      package.scripts['build:development:html'] = 'html-minifier --file-ext html --input-dir source --output-dir build/development'
+      package.scripts['build:production:html'] = 'html-minifier --collapse-whitespace --remove-comments --minify-css --file-ext html --input-dir source --output-dir build/production'
+      package.scripts['build:development'] = 'npm-run-all --parallel build:development:js build:development:html'
+      package.scripts['server:development'] = 'browser-sync start --server build/development --files build/development --no-open'
       fs.writeFileSync('./package.json', JSON.stringify(package, null, 2))
       "
     fi
