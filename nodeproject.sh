@@ -1,6 +1,6 @@
 nodeproject () {
   case $1 in
-    (create)
+    (init)
     if !([ -z "$2" ]); then
       PROJECTNAME=$2
       mkdir $PROJECTNAME
