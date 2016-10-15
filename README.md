@@ -25,3 +25,7 @@ Add binary:
 ``` bash
 nodeproject add binary
 ```
+
+## initialize a web project
+
+`webproject create [PROJECTNAME]`
