@@ -1,4 +1,4 @@
-# project scaffolding scripts
+# project initialization scripts
 
 ## initialize a node.js project
 
