@@ -26,6 +26,7 @@ webproject () {
       echo "<!doctype html>" >> source/index.html
       echo "<head>" >> source/index.html
       echo "  <meta charset=\"utf-8\" />" >> source/index.html
+      echo "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
       echo "  <title>$PROJECTNAME</title>" >> source/index.html
       echo "  <script src=\"bundle.js\"></script>" >> source/index.html
       echo "</head>" >> source/index.html
