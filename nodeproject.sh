@@ -73,7 +73,7 @@ nodeproject () {
 
       BASE_DEPENDENCIES="babel-cli babel-preset-es2015 babel-preset-stage-3 babel-plugin-add-module-exports rimraf nodemon eslint cross-env"
 
-      if (USE_YARN)
+      if ($USE_YARN)
       then
         yarn add $BASE_DEPENDENCIES --dev
       else
@@ -118,7 +118,7 @@ nodeproject () {
       # package.json
       TEST_DEPENDENCIES="tap-dot tape"
 
-      if (USE_YARN)
+      if ($USE_YARN)
       then
         yarn add $TEST_DEPENDENCIES --dev
       else
