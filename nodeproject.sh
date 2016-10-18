@@ -1,4 +1,14 @@
 nodeproject () {
+  # check if yarn is in PATH
+  if (which yarn > /dev/null)
+  then
+    USE_YARN=true
+    echo "using yarn"
+  else
+    USE_YARN=false
+    echo "using npm"
+  fi
+
   case $1 in
     (init)
     if !([ -z "$2" ]); then
@@ -60,7 +70,16 @@ nodeproject () {
 
       # package.json
       npm init -y
-      npm i --save-dev babel-cli babel-preset-es2015 babel-preset-stage-3 babel-plugin-add-module-exports rimraf nodemon eslint cross-env
+
+      BASE_DEPENDENCIES="babel-cli babel-preset-es2015 babel-preset-stage-3 babel-plugin-add-module-exports rimraf nodemon eslint cross-env"
+
+      if (USE_YARN)
+      then
+        yarn add $BASE_DEPENDENCIES --dev
+      else
+        npm i --save-dev $BASE_DEPENDENCIES
+      fi
+
       node -e "
       const fs = require('fs')
       const package = JSON.parse(fs.readFileSync('./package.json'))
@@ -97,7 +116,15 @@ nodeproject () {
       echo "})" >> src/tests/index.test.js
 
       # package.json
-      npm i --save-dev tap-dot tape
+      TEST_DEPENDENCIES="tap-dot tape"
+
+      if (USE_YARN)
+      then
+        yarn add $TEST_DEPENDENCIES --dev
+      else
+        npm i --save-dev $TEST_DEPENDENCIES
+      fi
+
       node -e "
       const fs = require('fs')
       const package = JSON.parse(fs.readFileSync('./package.json'))
