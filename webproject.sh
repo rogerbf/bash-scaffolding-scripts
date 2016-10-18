@@ -1,4 +1,14 @@
 webproject () {
+  # check if yarn is in PATH
+  if (which yarn > /dev/null)
+  then
+    USE_YARN=true
+    echo "using yarn"
+  else
+    USE_YARN=false
+    echo "using npm"
+  fi
+
   case $1 in
     (init)
     if !([ -z "$2" ]); then
@@ -26,7 +36,7 @@ webproject () {
       echo "<!doctype html>" >> source/index.html
       echo "<head>" >> source/index.html
       echo "  <meta charset=\"utf-8\" />" >> source/index.html
-      echo "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
+      echo "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">" >> source/index.html
       echo "  <title>$PROJECTNAME</title>" >> source/index.html
       echo "  <script src=\"bundle.js\"></script>" >> source/index.html
       echo "</head>" >> source/index.html
@@ -66,7 +76,15 @@ webproject () {
 
       # dev-dependencies
       npm init -y
-      npm i --save-dev babel-cli babel-preset-es2015 babel-preset-stage-3 rimraf mkdirp browserify rollupify babelify html-minifier uglify-js browser-sync npm-run-all onchange
+
+      BASE_DEPENDENCIES="babel-cli babel-preset-es2015 babel-preset-stage-3 rimraf mkdirp browserify rollupify babelify html-minifier uglify-js browser-sync npm-run-all onchange"
+
+      if ($USE_YARN)
+      then
+        yarn add $BASE_DEPENDENCIES --dev
+      else
+        npm i --save-dev $BASE_DEPENDENCIES
+      fi
 
       node -e "
       const fs = require('fs')
@@ -95,7 +113,16 @@ webproject () {
       (css)
       mkdir source/css
       touch source/index.css
-      npm i --save-dev postcss-cli postcss-cssnext postcss-import clean-css
+
+      CSS_DEPENDENCIES="postcss-cli postcss-cssnext postcss-import clean-css"
+
+      if ($USE_YARN)
+      then
+        yarn add $CSS_DEPENDENCIES --dev
+      else
+        npm i --save-dev $CSS_DEPENDENCIES
+      fi
+
       node -e "
       const fs = require('fs')
       const package = JSON.parse(fs.readFileSync('./package.json'))
