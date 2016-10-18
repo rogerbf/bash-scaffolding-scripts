@@ -3,7 +3,7 @@
 ## initialize a node.js project
 
 ```
-nodeproject create [PROJECTNAME]
+nodeproject init [PROJECTNAME]
 
 npm run build
 ```
@@ -27,5 +27,5 @@ nodeproject add binary
 ## initialize a web project
 
 ```
-webproject create [PROJECTNAME]
+webproject init [PROJECTNAME]
 ```
