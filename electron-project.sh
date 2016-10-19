@@ -73,7 +73,7 @@ ep_addFilesAndFolders () {
     echo '  mainWindow.loadURL(`file://${__dirname}/shell.html`)'
     echo ''
     echo '  // Open the DevTools.'
-    echo '  mainWindow.webContents.openDevTools({ mode : `undocked` })'
+    echo '  mainWindow.webContents.openDevTools({ detach : true })'
     echo ''
     echo '  // Emitted when the window is closed.'
     echo '  mainWindow.on(`closed`, () => {'
@@ -120,42 +120,42 @@ ep_addGitIgnore () {
 
 ep_addBabelConfig () {
   {
-    echo "{"
-    echo "  \"presets\": ["
-    echo "    [\"env\", {"
-    echo "      \"targets\": {"
-    echo "        \"node\": 6.5"
-    echo "      },"
-    echo "      \"loose\": true,"
-    echo "      \"modules\": \"commonjs\""
-    echo "    }]"
-    echo "  ]"
-    echo "}"
+    echo '{'
+    echo '  "presets": ['
+    echo '    ["env", {'
+    echo '      "targets": {'
+    echo '        "node": 6.5'
+    echo '      },'
+    echo '      "loose": true,'
+    echo '      "modules": "commonjs"'
+    echo '    }]'
+    echo '  ]'
+    echo '}'
   } >> .babelrc
 }
 
 ep_addEslintConfig () {
   {
-    echo "{"
-    echo "  \"extends\": \"standard\","
-    echo "  \"env\": {"
-    echo "    \"node\": true,"
-    echo "    \"browser\": true"
-    echo "  },"
-    echo "  \"parserOptions\": {"
-    echo "    \"ecmaVersion\": 6,"
-    echo "    \"sourceType\": \"module\","
-    echo "    \"ecmaFeatures\": {"
-    echo "      \"experimentalObjectRestSpread\": true"
-    echo "    }"
-    echo "  },"
-    echo "  \"rules\": {"
-    echo "    \"quotes\": ["
-    echo "      \"error\","
-    echo "      \"backtick\""
-    echo "    ]"
-    echo "  }"
-    echo "}"
+    echo '{'
+    echo '  "extends": "standard",'
+    echo '  "env": {'
+    echo '    "node": true,'
+    echo '    "browser": true'
+    echo '  },'
+    echo '  "parserOptions": {'
+    echo '    "ecmaVersion": 6,'
+    echo '    "sourceType": "module",'
+    echo '    "ecmaFeatures": {'
+    echo '      "experimentalObjectRestSpread": true'
+    echo '    }'
+    echo '  },'
+    echo '  "rules": {'
+    echo '    "quotes": ['
+    echo '      "error",'
+    echo '      "backtick"'
+    echo '    ]'
+    echo '  }'
+    echo '}'
   } >> .eslintrc.json
 
   {
