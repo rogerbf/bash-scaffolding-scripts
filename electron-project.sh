@@ -22,8 +22,6 @@ electron-project () {
     ep_installDependencies
     ep_configurePackageJson
 
-    # npm run eslint:fix
-
   esac
 
 }
