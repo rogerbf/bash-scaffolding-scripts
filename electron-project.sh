@@ -11,7 +11,7 @@ electron-project () {
   case $1 in
     (init)
 
-    echo "enter project name:"
+    echo 'enter project name:'
     read PROJECTNAME
 
     ep_addFilesAndFolders
@@ -32,9 +32,11 @@ ep_addFilesAndFolders () {
 
   mkdir source
   mkdir application
+  mkdir source/shell
+  mkdir source/styles
 
-  touch source/shell.css
-  touch source/shell.js
+  touch source/styles/shell.css
+  touch source/shell/shell.js
 
   # shell.html
   {
@@ -44,13 +46,13 @@ ep_addFilesAndFolders () {
     echo '  <meta charset="utf-8" />'
     echo '  <title>'$PROJECTNAME'</title>'
     echo '  <script src="shell.js"></script>'
-    echo '  <link rel="stylesheet" type="text/css" href="shell.css">'
+    echo '  <link rel="stylesheet" type="text/css" href="../styles/shell.css">'
     echo '</head>'
     echo '<body>'
     echo '  <h1>'$PROJECTNAME'</h1>'
     echo '</body>'
     echo '</html>'
-  } >> source/shell.html
+  } >> source/shell/shell.html
 
   # core.js
   {
@@ -68,7 +70,7 @@ ep_addFilesAndFolders () {
     echo '  mainWindow = new BrowserWindow({width: 800, height: 600})'
     echo ''
     echo '  // and load the index.html of the app.'
-    echo '  mainWindow.loadURL(`file://${__dirname}/shell.html`)'
+    echo '  mainWindow.loadURL(`file://${__dirname}/shell/shell.html`)'
     echo ''
     echo '  // Open the DevTools.'
     echo '  mainWindow.webContents.openDevTools({ detach : true })'
@@ -111,8 +113,8 @@ ep_addFilesAndFolders () {
 
 ep_addGitIgnore () {
   {
-    echo "node_modules"
-    echo "yarn.lock"
+    echo 'node_modules'
+    echo 'yarn.lock'
   } >> .gitignore
 }
 
@@ -157,21 +159,22 @@ ep_addEslintConfig () {
   } >> .eslintrc.json
 
   {
-    echo "application"
+    echo 'application'
   } >> .eslintignore
 }
 
 ep_installDependencies () {
-  DEV_DEPENDENCIES_BABEL="babel-cli babel-preset-env"
-  DEV_DEPENDENCIES_ESLINT="eslint eslint-config-standard eslint-plugin-promise eslint-plugin-standard"
-  DEV_DEPENDENCIES_OTHER="electron-reload html-minifier npm-run-all onchange"
+  DEV_DEPENDENCIES_BABEL='babel-cli babel-preset-env'
+  DEV_DEPENDENCIES_ESLINT='eslint eslint-config-standard eslint-plugin-promise eslint-plugin-standard'
+  DEV_DEPENDENCIES_POSTCSS='postcss-cli postcss-cssnext'
+  DEV_DEPENDENCIES_OTHER='electron-reload html-minifier npm-run-all onchange'
 
   if ($USE_YARN)
   then
-    yarn add $DEV_DEPENDENCIES_BABEL $DEV_DEPENDENCIES_ESLINT $DEV_DEPENDENCIES_OTHER --dev
+    yarn add $DEV_DEPENDENCIES_BABEL $DEV_DEPENDENCIES_ESLINT $DEV_DEPENDENCIES_POSTCSS $DEV_DEPENDENCIES_OTHER --dev
     yarn add electron
   else
-    npm i --save-dev $DEV_DEPENDENCIES_BABEL $DEV_DEPENDENCIES_ESLINT $DEV_DEPENDENCIES_OTHER
+    npm i --save-dev $DEV_DEPENDENCIES_BABEL $DEV_DEPENDENCIES_ESLINT $DEV_DEPENDENCIES_POSTCSS $DEV_DEPENDENCIES_OTHER
     npm i --save electron
   fi
 }
@@ -187,12 +190,14 @@ ep_configurePackageJson () {
   package.scripts['start'] = 'npm run build && electron .'
   package.scripts['start:watch'] = 'NODE_ENV=development npm-run-all --parallel start watch'
   package.scripts['watch'] = 'npm-run-all --parallel watch:*'
-  package.scripts['build'] = 'npm run html-minifier & npm run babel'
-  package.scripts['html-minifier'] = 'html-minifier --file-ext html --remove-comments --input-dir source --output-dir application'
-  package.scripts['babel'] = 'babel source --out-dir application'
+  package.scripts['build'] = 'npm-run-all --parallel build:*'
+  package.scripts['build:html'] = 'html-minifier --file-ext html --remove-comments --input-dir source --output-dir application'
+  package.scripts['build:js'] = 'babel source --out-dir application'
+  package.scripts['build:css'] = 'postcss --use postcss-cssnext --dir application/styles source/styles/*.css'
+  package.scripts['watch:html'] = 'onchange \"source/*.html\" \"source/**/*.html\" -- npm run build:html'
+  package.scripts['watch:js'] = 'onchange \"source/*.js\" \"source/**/*.js\" -- npm run build:js'
+  package.scripts['watch:css'] = 'onchange \"source/styles/*.css\" -- npm run build:css'
   package.scripts['eslint:fix'] = 'eslint --fix source'
-  package.scripts['watch:html'] = 'onchange \"source/*.html\" \"source/**/*.html\" -- npm run html-minifier'
-  package.scripts['watch:js'] = 'onchange \"source/*.js\" \"source/**/*.js\" -- npm run babel'
 
   fs.writeFileSync('./package.json', JSON.stringify(package, null, 2))
   "
