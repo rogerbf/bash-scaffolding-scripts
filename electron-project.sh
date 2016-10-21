@@ -22,6 +22,11 @@ electron-project () {
     ep_installDependencies
     ep_configurePackageJson
 
+    cd application
+    npm init -y
+    ep_configureApplicationPackageJson
+    cd ..
+
   esac
 
 }
@@ -35,8 +40,18 @@ ep_addFilesAndFolders () {
   mkdir source/shell
   mkdir source/styles
 
-  touch source/styles/shell.css
   touch source/shell/shell.js
+
+  # shell.css
+  {
+    echo 'html, body {'
+    echo 'padding: 0;'
+    echo 'margin: 0;'
+    echo 'user-select: none;'
+    echo 'font: caption;'
+    echo 'cursor: default;'
+    echo '}'
+  } >> source/styles/shell.css
 
   # shell.html
   {
@@ -50,6 +65,7 @@ ep_addFilesAndFolders () {
     echo '</head>'
     echo '<body>'
     echo '  <h1>'$PROJECTNAME'</h1>'
+    echo '  <p>happy coding!</p>'
     echo '</body>'
     echo '</html>'
   } >> source/shell/shell.html
@@ -67,13 +83,25 @@ ep_addFilesAndFolders () {
     echo ''
     echo 'function createWindow () {'
     echo '  // Create the browser window.'
-    echo '  mainWindow = new BrowserWindow({width: 800, height: 600})'
+    echo '  mainWindow = new BrowserWindow({'
+    echo '    width: 800,'
+    echo '    height: 600,'
+    echo '    // icon: ``,'
+    echo '    // title: ``,'
+    echo '    // backgroundColor: ``,'
+    echo '    show: false'
+    echo '  })'
+    echo ''
+    echo '  mainWindow.on(`ready-to-show`, () => {'
+    echo '    mainWindow.show()'
+    echo '    mainWindow.focus'
+    echo '  })'
     echo ''
     echo '  // and load the index.html of the app.'
     echo '  mainWindow.loadURL(`file://${__dirname}/shell/shell.html`)'
     echo ''
     echo '  // Open the DevTools.'
-    echo '  mainWindow.webContents.openDevTools({ detach : true })'
+    echo '  mainWindow.webContents.openDevTools({ detach: true })'
     echo ''
     echo '  // Emitted when the window is closed.'
     echo '  mainWindow.on(`closed`, () => {'
@@ -198,6 +226,23 @@ ep_configurePackageJson () {
   package.scripts['watch:js'] = 'onchange \"source/*.js\" \"source/**/*.js\" -- npm run build:js'
   package.scripts['watch:css'] = 'onchange \"source/styles/*.css\" -- npm run build:css'
   package.scripts['eslint:fix'] = 'eslint --fix source'
+
+  fs.writeFileSync('./package.json', JSON.stringify(package, null, 2))
+  "
+}
+
+ep_configureApplicationPackageJson () {
+  PROJECTNAME=$PROJECTNAME node -e "
+  const fs = require('fs')
+
+  const package = JSON.parse(fs.readFileSync('./package.json'))
+
+  package.main = 'core.js'
+  package.name = process.env.PROJECTNAME
+  package.productName = process.env.PROJECTNAME
+  package.copyright = ''
+
+  delete package['scripts']
 
   fs.writeFileSync('./package.json', JSON.stringify(package, null, 2))
   "
