@@ -36,9 +36,10 @@ ep_addFilesAndFolders () {
   cd $PROJECTNAME
 
   mkdir source
-  mkdir application
   mkdir source/shell
   mkdir source/styles
+  mkdir source/menu
+  mkdir application
 
   touch source/shell/shell.js
 
@@ -72,7 +73,8 @@ ep_addFilesAndFolders () {
 
   # core.js
   {
-    echo 'import { app, BrowserWindow } from "electron"'
+    echo 'import { app, BrowserWindow } from '"'electron'"
+    echo 'import initializeApplicationMenu from '"'./menu/menu.js'"
     echo ''
     echo 'if (process.env.NODE_ENV === `development`) {'
     echo '  require(`electron-reload`)(__dirname)'
@@ -86,7 +88,7 @@ ep_addFilesAndFolders () {
     echo '  mainWindow = new BrowserWindow({'
     echo '    width: 800,'
     echo '    height: 600,'
-    echo '    // icon: ``,'
+    echo '    // icon: ``, // Ubuntu'
     echo '    // title: ``,'
     echo '    // backgroundColor: ``,'
     echo '    show: false'
@@ -115,7 +117,10 @@ ep_addFilesAndFolders () {
     echo '// This method will be called when Electron has finished'
     echo '// initialization and is ready to create browser windows.'
     echo '// Some APIs can only be used after this event occurs.'
-    echo 'app.on(`ready`, createWindow)'
+    echo 'app.on(`ready`, () => {'
+    echo '  initializeApplicationMenu()'
+    echo '  createWindow()'
+    echo '})'
     echo ''
     echo '// Quit when all windows are closed.'
     echo 'app.on(`window-all-closed`, () => {'
@@ -134,15 +139,102 @@ ep_addFilesAndFolders () {
     echo '  }'
     echo '})'
     echo ''
-
   } >> source/core.js
+
+  {
+    echo 'import { Menu } from '"'electron'"
+    echo 'import development from '"'./development.js'"
+    echo 'import darwin from '"'./darwin.js'"
+    echo ''
+    echo 'export default () => {'
+    echo '  let template = []'
+    echo ''
+    echo '  if (process.platform === `darwin`) {'
+    echo '    template = template.concat(darwin)'
+    echo '  }'
+    echo ''
+    echo '  if (process.env.NODE_ENV === `development`) {'
+    echo '    template = template.concat(development)'
+    echo '  }'
+    echo ''
+    echo '  Menu.setApplicationMenu('
+    echo '    Menu.buildFromTemplate(template)'
+    echo '  )'
+    echo '}'
+    echo ''
+  } >> source/menu/menu.js
+
+  {
+    echo 'import { BrowserWindow } from '"'electron'"
+    echo ''
+    echo 'export default ['
+    echo '  {'
+    echo '    label: `Developer`,'
+    echo '    submenu: [{'
+    echo '      label: `Toggle DevTools`,'
+    echo '      accelerator: `CmdOrCtrl+Shift+D`,'
+    echo '      click: () => {'
+    echo '        BrowserWindow'
+    echo '            .getFocusedWindow().webContents'
+    echo '            .openDevTools({ detach: true })'
+    echo '      }'
+    echo '    }]'
+    echo '  }'
+    echo ']'
+    echo ''
+  } >> source/menu/development.js
+
+  {
+    echo 'import { app } from '"'electron'"
+    echo ''
+    echo 'export default ['
+    echo '  {'
+    echo '    label: `mainMenu`,'
+    echo '    submenu: [{'
+    echo '      label: `Quit`,'
+    echo '      accelerator: `CmdOrCtrl+Q`,'
+    echo '      click: () => app.quit()'
+    echo '    }]'
+    echo '  },'
+    echo '  {'
+    echo '    label: `Edit`,'
+    echo '    submenu: [{'
+    echo '      label: `Undo`,'
+    echo '      accelerator: `CmdOrCtrl+Z`,'
+    echo '      selector: `undo:`'
+    echo '    }, {'
+    echo '      label: `Redo`,'
+    echo '      accelerator: `Shift+CmdOrCtrl+Z`,'
+    echo '      selector: `redo:`'
+    echo '    }, {'
+    echo '      type: `separator`'
+    echo '    }, {'
+    echo '      label: `Cut`,'
+    echo '      accelerator: `CmdOrCtrl+X`,'
+    echo '      selector: `cut:`'
+    echo '    }, {'
+    echo '      label: `Copy`,'
+    echo '      accelerator: `CmdOrCtrl+C`,'
+    echo '      selector: `copy:`'
+    echo '    }, {'
+    echo '      label: `Paste`,'
+    echo '      accelerator: `CmdOrCtrl+V`,'
+    echo '      selector: `paste:`'
+    echo '    }, {'
+    echo '      label: `Select All`,'
+    echo '      accelerator: `CmdOrCtrl+A`,'
+    echo '      selector: `selectAll:`'
+    echo '    }]'
+    echo '  }'
+    echo ']'
+    echo ''
+  } >> source/menu/darwin.js
 
 }
 
 ep_addGitIgnore () {
   {
     echo 'node_modules'
-    echo 'yarn.lock'
   } >> .gitignore
 }
 
