@@ -39,9 +39,11 @@ ep_addFilesAndFolders () {
   mkdir source/shell
   mkdir source/styles
   mkdir source/menu
+  touch source/shell/shell.js
+
   mkdir application
 
-  touch source/shell/shell.js
+  mkdir icons
 
   # shell.css
   {
@@ -88,7 +90,7 @@ ep_addFilesAndFolders () {
     echo '  mainWindow = new BrowserWindow({'
     echo '    width: 800,'
     echo '    height: 600,'
-    echo '    // Ubuntu shows the window icon in dock'
+    echo '    // Ubuntu shows the window icon in dock, macos & win use application icon.'
     echo '    // icon: ``,'
     echo '    // title: ``,'
     echo '    // backgroundColor: ``,'
