@@ -43,8 +43,8 @@ ep_addFilesAndFolders () {
 
   mkdir application
 
-  mkdir build
-  mkdir build/assets
+  mkdir distribution
+  mkdir distribution/assets
 
   # shell.css
   {
@@ -328,8 +328,8 @@ ep_configurePackageJson () {
   package.scripts['release:all'] = 'npm run build && build --macos --windows --ia32 --x64'
 
   const directories = {
-    buildResources: 'build/assets',
-    output: 'build/distributions',
+    buildResources: 'distribution/assets',
+    output: 'distribution/releases',
     app: 'application'
   }
 
