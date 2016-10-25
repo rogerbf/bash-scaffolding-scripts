@@ -43,7 +43,8 @@ ep_addFilesAndFolders () {
 
   mkdir application
 
-  mkdir icons
+  mkdir build
+  mkdir build/assets
 
   # shell.css
   {
@@ -287,23 +288,22 @@ ep_addEslintConfig () {
 }
 
 ep_installDependencies () {
+  DEV_DEPENDENCIES_ELECTRON='electron electron-builder electron-reload'
   DEV_DEPENDENCIES_BABEL='babel-cli babel-preset-env'
   DEV_DEPENDENCIES_ESLINT='eslint eslint-config-standard eslint-plugin-promise eslint-plugin-standard'
   DEV_DEPENDENCIES_POSTCSS='postcss-cli postcss-cssnext'
-  DEV_DEPENDENCIES_OTHER='electron-reload html-minifier npm-run-all onchange'
+  DEV_DEPENDENCIES_OTHER='html-minifier npm-run-all onchange'
 
   if ($USE_YARN)
   then
-    yarn add $DEV_DEPENDENCIES_BABEL $DEV_DEPENDENCIES_ESLINT $DEV_DEPENDENCIES_POSTCSS $DEV_DEPENDENCIES_OTHER --dev
-    yarn add electron
+    yarn add $DEV_DEPENDENCIES_ELECTRON $DEV_DEPENDENCIES_BABEL $DEV_DEPENDENCIES_ESLINT $DEV_DEPENDENCIES_POSTCSS $DEV_DEPENDENCIES_OTHER --dev
   else
-    npm i --save-dev $DEV_DEPENDENCIES_BABEL $DEV_DEPENDENCIES_ESLINT $DEV_DEPENDENCIES_POSTCSS $DEV_DEPENDENCIES_OTHER
-    npm i --save electron
+    npm i --save-dev $DEV_DEPENDENCIES_ELECTRON $DEV_DEPENDENCIES_BABEL $DEV_DEPENDENCIES_ESLINT $DEV_DEPENDENCIES_POSTCSS $DEV_DEPENDENCIES_OTHER
   fi
 }
 
 ep_configurePackageJson () {
-  node -e "
+  PROJECTNAME=$PROJECTNAME node -e "
   const fs = require('fs')
 
   const package = JSON.parse(fs.readFileSync('./package.json'))
@@ -321,6 +321,23 @@ ep_configurePackageJson () {
   package.scripts['watch:js'] = 'onchange \"source/*.js\" \"source/**/*.js\" -- npm run build:js'
   package.scripts['watch:css'] = 'onchange \"source/styles/*.css\" -- npm run build:css'
   package.scripts['eslint:fix'] = 'eslint --fix source'
+  package.scripts['distribute:macos'] = 'build --macos'
+
+  const directories = {
+    buildResources: 'build/assets',
+    output: 'build/distributions',
+    app: 'application'
+  }
+
+  const build = {
+    appId: 'com.example.' + process.env.PROJECTNAME,
+    mac: {
+      'app-category-type': 'application.category'
+    }
+  }
+
+  package.directories = directories
+  package.build = build
 
   fs.writeFileSync('./package.json', JSON.stringify(package, null, 2))
   "
@@ -335,10 +352,18 @@ ep_configureApplicationPackageJson () {
   package.main = 'core.js'
   package.name = process.env.PROJECTNAME
   package.productName = process.env.PROJECTNAME
+  package.description = 'application description'
+  package.homepage = ''
   package.copyright = ''
 
   delete package['scripts']
 
-  fs.writeFileSync('./package.json', JSON.stringify(package, null, 2))
+  const sortedPackage = Object.keys(package).sort().reduce(
+  (acc, key) => {
+      return Object.assign(acc, { [key]: package[key] })
+    }, {}
+  )
+
+  fs.writeFileSync('./package.json', JSON.stringify(sortedPackage, null, 2))
   "
 }
