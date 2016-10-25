@@ -324,6 +324,7 @@ ep_configurePackageJson () {
   package.scripts['watch:css'] = 'onchange \"source/styles/*.css\" -- npm run build:css'
   package.scripts['eslint:fix'] = 'eslint --fix source'
   package.scripts['distribute:macos'] = 'build --macos'
+  package.scripts['distribute:windows'] = 'build --windows --ia32 --x64'
 
   const directories = {
     buildResources: 'build/assets',
@@ -334,7 +335,13 @@ ep_configurePackageJson () {
   const build = {
     appId: 'com.example.' + process.env.PROJECTNAME,
     mac: {
-      'app-category-type': 'application.category'
+      'app-category-type': 'application.category',
+      'target': ['zip', 'dmg']
+    },
+    win: {
+      target: [
+        'nsis'
+      ]
     }
   }
 
