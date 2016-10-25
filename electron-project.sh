@@ -316,15 +316,16 @@ ep_configurePackageJson () {
   package.scripts['start:watch'] = 'NODE_ENV=development npm-run-all --parallel start watch'
   package.scripts['watch'] = 'npm-run-all --parallel watch:*'
   package.scripts['build'] = 'npm-run-all --parallel build:*'
+  package.scripts['eslint:fix'] = 'eslint --fix source'
   package.scripts['build:html'] = 'html-minifier --file-ext html --remove-comments --input-dir source --output-dir application'
   package.scripts['build:js'] = 'babel source --out-dir application'
   package.scripts['build:css'] = 'postcss --use postcss-cssnext --dir application/styles source/styles/*.css'
   package.scripts['watch:html'] = 'onchange \"source/*.html\" \"source/**/*.html\" -- npm run build:html'
   package.scripts['watch:js'] = 'onchange \"source/*.js\" \"source/**/*.js\" -- npm run build:js'
   package.scripts['watch:css'] = 'onchange \"source/styles/*.css\" -- npm run build:css'
-  package.scripts['eslint:fix'] = 'eslint --fix source'
-  package.scripts['distribute:macos'] = 'build --macos'
-  package.scripts['distribute:windows'] = 'build --windows --ia32 --x64'
+  package.scripts['release:macos'] = 'npm run build && build --macos'
+  package.scripts['release:windows'] = 'npm run build && build --windows --ia32 --x64'
+  package.scripts['release:all'] = 'npm run build && build --macos --windows --ia32 --x64'
 
   const directories = {
     buildResources: 'build/assets',
