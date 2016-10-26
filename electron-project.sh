@@ -49,11 +49,11 @@ ep_addFilesAndFolders () {
   # shell.css
   {
     echo 'html, body {'
-    echo 'padding: 0;'
-    echo 'margin: 0;'
-    echo 'user-select: none;'
-    echo 'font: caption;'
-    echo 'cursor: default;'
+    echo '  padding: 0;'
+    echo '  margin: 0;'
+    echo '  user-select: none;'
+    echo '  font: caption;'
+    echo '  cursor: default;'
     echo '}'
   } >> source/styles/shell.css
 
@@ -64,8 +64,8 @@ ep_addFilesAndFolders () {
     echo '<head>'
     echo '  <meta charset="utf-8" />'
     echo '  <title>'$PROJECTNAME'</title>'
-    echo '  <script src="shell.js"></script>'
     echo '  <link rel="stylesheet" type="text/css" href="../styles/shell.css">'
+    echo '  <script src="shell.js"></script>'
     echo '</head>'
     echo '<body>'
     echo '  <h1>'$PROJECTNAME'</h1>'
@@ -73,6 +73,16 @@ ep_addFilesAndFolders () {
     echo '</body>'
     echo '</html>'
   } >> source/shell/shell.html
+
+  # shell.js
+  {
+    echo 'const start = () => {'
+    echo '  console.log(`dom loaded`)'
+    echo '}'
+    echo ''
+    echo 'window.addEventListener(`load`, start)'
+    echo ''
+  } >> source/shell/shell.js
 
   # core.js
   {
@@ -366,7 +376,8 @@ ep_configurePackageJson () {
   package.main = 'application/core.js'
 
   package.scripts['start'] = 'npm run build && electron .'
-  package.scripts['start:watch'] = 'NODE_ENV=development npm-run-all --parallel start watch'
+  package.scripts['start:development'] = 'npm run build && NODE_ENV=development electron .'
+  package.scripts['start:development:watch'] = 'NODE_ENV=development npm-run-all --parallel start watch'
   package.scripts['watch'] = 'npm-run-all --parallel watch:*'
   package.scripts['build'] = 'npm-run-all --parallel build:*'
   package.scripts['eslint:fix'] = 'eslint --fix source'
