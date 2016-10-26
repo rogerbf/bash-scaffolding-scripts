@@ -157,6 +157,7 @@ ep_addFilesAndFolders () {
     echo ''
   } >> source/core.js
 
+  # menu/menu.js
   {
     echo 'import { Menu } from '"'electron'"
     echo 'import development from '"'./development.js'"
@@ -180,6 +181,7 @@ ep_addFilesAndFolders () {
     echo ''
   } >> source/menu/menu.js
 
+  # menu/development.js
   {
     echo 'import { BrowserWindow } from '"'electron'"
     echo ''
@@ -200,6 +202,7 @@ ep_addFilesAndFolders () {
     echo ''
   } >> source/menu/development.js
 
+  # menu/darwin.js
   {
     echo 'import { app } from '"'electron'"
     echo ''
@@ -318,7 +321,8 @@ ep_addBabelConfig () {
     echo '      "loose": true,'
     echo '      "modules": "commonjs"'
     echo '    }]'
-    echo '  ]'
+    echo '  ],'
+    echo '  "comments": false'
     echo '}'
   } >> .babelrc
 }
