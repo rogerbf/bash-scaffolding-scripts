@@ -337,7 +337,7 @@ ep_addEslintConfig () {
     echo '    "browser": true'
     echo '  },'
     echo '  "parserOptions": {'
-    echo '    "ecmaVersion": 6,'
+    echo '    "ecmaVersion": 2017,'
     echo '    "sourceType": "module",'
     echo '    "ecmaFeatures": {'
     echo '      "experimentalObjectRestSpread": true'
