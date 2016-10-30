@@ -58,7 +58,7 @@ nodeproject () {
       node -e "
       const fs = require('fs')
       const babel = {
-        presets: ['latest'],
+        presets: ['latest', 'stage-3'],
         plugins: ['add-module-exports'],
         env: {
           production: {
@@ -73,7 +73,7 @@ nodeproject () {
       # package.json
       npm init -y
 
-      BASE_DEPENDENCIES="babel-cli babel-preset-latest babel-plugin-add-module-exports rimraf nodemon eslint eslint-config-standard eslint-plugin-promise eslint-plugin-standard cross-env"
+      BASE_DEPENDENCIES="babel-cli babel-preset-latest babel-preset-stage-3 babel-plugin-add-module-exports rimraf nodemon eslint eslint-config-standard eslint-plugin-promise eslint-plugin-standard cross-env"
 
       if ($USE_YARN)
       then
