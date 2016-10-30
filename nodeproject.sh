@@ -35,11 +35,12 @@ nodeproject () {
       node -e "
       const fs = require('fs')
       const eslintConfig = {
+        extends: 'standard',
         env: {
           node: true,
         },
         parserOptions: {
-          ecmaVersion: 6,
+          ecmaVersion: 2017,
           sourceType: 'module',
           ecmaFeatures: {
             experimentalObjectRestSpread: true
@@ -57,11 +58,12 @@ nodeproject () {
       node -e "
       const fs = require('fs')
       const babel = {
-        presets: ['es2015', 'stage-3'],
+        presets: ['latest'],
         plugins: ['add-module-exports'],
         env: {
           production: {
-            ignore: ['*.test.*']
+            ignore: ['*.test.*'],
+            comments: false
           }
         }
       }
@@ -71,7 +73,7 @@ nodeproject () {
       # package.json
       npm init -y
 
-      BASE_DEPENDENCIES="babel-cli babel-preset-es2015 babel-preset-stage-3 babel-plugin-add-module-exports rimraf nodemon eslint cross-env"
+      BASE_DEPENDENCIES="babel-cli babel-preset-latest babel-plugin-add-module-exports rimraf nodemon eslint eslint-config-standard eslint-plugin-promise eslint-plugin-standard cross-env"
 
       if ($USE_YARN)
       then
