@@ -19,6 +19,7 @@ electron-project () {
     npm init -y
     ep_addBabelConfig
     ep_addEslintConfig
+    ep_addTernConfig
     ep_installDependencies
     ep_configurePackageJson
 
@@ -355,6 +356,35 @@ ep_addEslintConfig () {
   {
     echo 'application'
   } >> .eslintignore
+}
+
+ep_addTernConfig () {
+  {
+    echo '{'
+    echo '  "ecmaVersion": 7,'
+    echo '  "libs": ['
+    echo '    "browser"'
+    echo '  ],'
+    echo '  "loadEagerly": ['
+    echo '    "source"'
+    echo '  ],'
+    echo '  "dontLoad": ['
+    echo '    "application",'
+    echo '    "distribution"'
+    echo '  ],'
+    echo '  "plugins": {'
+    echo '    "complete_strings": {'
+    echo '      "maxLength": 15'
+    echo '    },'
+    echo '    "node": {},'
+    echo '    "es_modules": {},'
+    echo '    "doc_comment": {'
+    echo '      "fullDocs": true,'
+    echo '      "strong": true'
+    echo '    }'
+    echo '  }'
+    echo '}'
+  } >> .tern-project
 }
 
 ep_installDependencies () {
