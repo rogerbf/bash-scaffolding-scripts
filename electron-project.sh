@@ -37,17 +37,17 @@ ep_addFilesAndFolders () {
   cd $PROJECTNAME
 
   mkdir source
-  mkdir source/shell
+  mkdir source/mainWindow
   mkdir source/styles
   mkdir source/menu
-  touch source/shell/shell.js
+  touch source/mainWindow/mainWindow.js
 
   mkdir application
 
   mkdir distribution
   mkdir distribution/assets
 
-  # shell.css
+  # mainWindow.css
   {
     echo 'html, body {'
     echo '  padding: 0;'
@@ -56,26 +56,26 @@ ep_addFilesAndFolders () {
     echo '  font: caption;'
     echo '  cursor: default;'
     echo '}'
-  } >> source/styles/shell.css
+  } >> source/styles/mainWindow.css
 
-  # shell.html
+  # mainWindow.html
   {
     echo '<!doctype html>'
     echo '<html>'
     echo '<head>'
     echo '  <meta charset="utf-8" />'
     echo '  <title>'$PROJECTNAME'</title>'
-    echo '  <link rel="stylesheet" type="text/css" href="../styles/shell.css">'
-    echo '  <script src="shell.js"></script>'
+    echo '  <link rel="stylesheet" type="text/css" href="../styles/mainWindow.css">'
+    echo '  <script src="mainWindow.js"></script>'
     echo '</head>'
     echo '<body>'
     echo '  <h1>'$PROJECTNAME'</h1>'
     echo '  <p>happy coding!</p>'
     echo '</body>'
     echo '</html>'
-  } >> source/shell/shell.html
+  } >> source/mainWindow/mainWindow.html
 
-  # shell.js
+  # mainWindow.js
   {
     echo 'const start = () => {'
     echo '  console.log(`dom loaded`)'
@@ -83,7 +83,7 @@ ep_addFilesAndFolders () {
     echo ''
     echo 'window.addEventListener(`load`, start)'
     echo ''
-  } >> source/shell/shell.js
+  } >> source/mainWindow/mainWindow.js
 
   # core.js
   {
@@ -116,7 +116,7 @@ ep_addFilesAndFolders () {
     echo '  })'
     echo ''
     echo '  // and load the index.html of the app.'
-    echo '  mainWindow.loadURL(`file://${__dirname}/shell/shell.html`)'
+    echo '  mainWindow.loadURL(`file://${__dirname}/mainWindow/mainWindow.html`)'
     echo ''
     echo '  // Open the DevTools.'
     echo '  if (process.env.NODE_ENV === `development`) {'
