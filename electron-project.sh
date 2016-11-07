@@ -370,7 +370,8 @@ ep_addTernConfig () {
     echo '  ],'
     echo '  "dontLoad": ['
     echo '    "application",'
-    echo '    "distribution"'
+    echo '    "distribution",'
+    echo '    "node_modules"'
     echo '  ],'
     echo '  "plugins": {'
     echo '    "complete_strings": {'
@@ -466,12 +467,6 @@ ep_configureApplicationPackageJson () {
   package.copyright = ''
 
   delete package['scripts']
-
-  const sortedPackage = Object.keys(package).sort().reduce(
-  (acc, key) => {
-      return Object.assign(acc, { [key]: package[key] })
-    }, {}
-  )
 
   fs.writeFileSync('./package.json', JSON.stringify(sortedPackage, null, 2))
   "
