@@ -151,7 +151,7 @@ np_addTernConfig () {
 np_installDependencies () {
   DEV_DEPENDENCIES_BABEL='babel-cli babel-preset-latest babel-preset-stage-3 babel-plugin-add-module-exports'
   DEV_DEPENDENCIES_ESLINT='eslint eslint-config-standard eslint-plugin-promise eslint-plugin-standard'
-  DEV_DEPENDENCIES_OTHER='rimraf onchange cross-env'
+  DEV_DEPENDENCIES_OTHER='rimraf onchange cross-env nsp'
 
   if ($USE_YARN)
   then
@@ -171,12 +171,13 @@ np_configurePackageJson () {
   package.scripts['test'] = 'echo \'no tests\''
   package.scripts['prebuild'] = 'npm test && rimraf distribution'
   package.scripts['build'] = 'cross-env BABEL_ENV=production babel --out-dir distribution source'
-  package.scripts['prepublish'] = 'npm run build'
+  package.scripts['prepublish'] = 'npm run nsp && npm run test && npm run build'
   package.scripts['start'] = 'npm run build && node ./distribution/index.js'
   package.scripts['watch:start'] = 'onchange source/*.js source/**/*.js -- npm run start'
   package.scripts['eslint'] = 'eslint source'
   package.scripts['eslint:fix'] = 'eslint --fix source'
   package.scripts['repl'] = 'npm run build && babel-node'
+  package.scripts['nsp'] = 'nsp check'
   fs.writeFileSync('./package.json', JSON.stringify(package, null, 2))
   "
 }
