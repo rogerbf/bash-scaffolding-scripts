@@ -21,19 +21,20 @@ node-project () {
     np_addTernConfig
     np_installDependencies
     np_configurePackageJson
-
     ;;
 
     (add)
     case $2 in
-      (unittests)
-      np_unittests
-
+      (unittesting)
+      np_unittesting
       ;;
 
       (binary)
       np_binary
+      ;;
 
+      (coverage)
+      np_coverage
       ;;
     esac
     ;;
@@ -182,8 +183,19 @@ np_configurePackageJson () {
   "
 }
 
-np_unittests () {
-  mkdir source/tests
+np_unittesting () {
+  mkdir source/test
+
+  {
+    echo 'import test from '"'tape'"
+    echo 'import '"$PROJECTNAME"' from '"'../index'"
+    echo ''
+    echo 'test(`'"$PROJECTNAME"'`, assert => {'
+    echo '  assert.ok('"$PROJECTNAME"', `exports something`)'
+    echo '  assert.end()'
+    echo '})'
+    echo ''
+  } >> source/test/index.test.js
 
   DEV_DEPENDENCIES_UNITTESTS="tape tap-dot"
 
@@ -220,4 +232,28 @@ np_binary () {
   )
   fs.writeFileSync('./package.json', JSON.stringify(package, null, 2))
   "
+}
+
+np_coverage () {
+  DEV_DEPENDENCIES_COVERAGE="nyc"
+
+  if ($USE_YARN)
+  then
+    yarn add $DEV_DEPENDENCIES_COVERAGE --dev
+  else
+    npm i --save-dev $DEV_DEPENDENCIES_COVERAGE
+  fi
+
+  node -e "
+  const fs = require('fs')
+  const package = JSON.parse(fs.readFileSync('./package.json'))
+  package.scripts['test:coverage'] = 'nyc --reporter=lcov --require babel-register npm test && nyc report'
+  package.scripts['watch:test:coverage'] = 'onchange source/*.js source/**/*.js -- npm run test:coverage'
+  fs.writeFileSync('./package.json', JSON.stringify(package, null, 2))
+  "
+
+  {
+    echo '.nyc_output'
+    echo 'coverage'
+  } >> .gitignore
 }
