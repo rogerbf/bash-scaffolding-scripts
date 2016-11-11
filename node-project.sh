@@ -172,7 +172,7 @@ np_configurePackageJson () {
   package.scripts['test'] = 'echo \'no tests\''
   package.scripts['prebuild'] = 'npm test && rimraf distribution'
   package.scripts['build'] = 'cross-env BABEL_ENV=production babel --out-dir distribution source'
-  package.scripts['prepublish'] = 'npm run nsp && npm run test && npm run build'
+  package.scripts['prepublish'] = 'npm run nsp && npm run build'
   package.scripts['start'] = 'npm run build && node ./distribution/index.js'
   package.scripts['watch:start'] = 'onchange source/*.js source/**/*.js -- npm run start'
   package.scripts['eslint'] = 'eslint source'
