@@ -174,7 +174,7 @@ np_configurePackageJson () {
   package.scripts['build'] = 'cross-env BABEL_ENV=production babel --out-dir distribution source'
   package.scripts['prepublish'] = 'npm run nsp && npm run build'
   package.scripts['start'] = 'npm run build && node ./distribution/index.js'
-  package.scripts['watch:start'] = 'onchange source/*.js source/**/*.js -- npm run start'
+  package.scripts['watch:start'] = 'onchange \"source/*.js\" \"source/**/*.js\" -- npm run start'
   package.scripts['eslint'] = 'eslint source'
   package.scripts['eslint:fix'] = 'eslint --fix source'
   package.scripts['repl'] = 'npm run build && babel-node'
@@ -210,7 +210,7 @@ np_unittesting () {
   const fs = require('fs')
   const package = JSON.parse(fs.readFileSync('./package.json'))
   package.scripts['test'] = 'tape -r babel-register ./source/**/*.test.js | tap-dot'
-  package.scripts['watch:test'] = 'onchange source/*.js source/**/*.js -- npm run test'
+  package.scripts['watch:test'] = 'onchange \"source/*.js\" \"source/**/*.js\" -- npm run test'
   fs.writeFileSync('./package.json', JSON.stringify(package, null, 2))
   "
 }
@@ -248,7 +248,7 @@ np_coverage () {
   const fs = require('fs')
   const package = JSON.parse(fs.readFileSync('./package.json'))
   package.scripts['test:coverage'] = 'nyc --reporter=lcov --require babel-register npm test && nyc report'
-  package.scripts['watch:test:coverage'] = 'onchange source/*.js source/**/*.js -- npm run test:coverage'
+  package.scripts['watch:test:coverage'] = 'onchange \"source/*.js\" \"source/**/*.js\" -- npm run test:coverage'
   fs.writeFileSync('./package.json', JSON.stringify(package, null, 2))
   "
 
