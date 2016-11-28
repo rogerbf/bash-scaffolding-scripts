@@ -25,16 +25,16 @@ node-project () {
 
     (add)
     case $2 in
-      (unittesting)
-      np_unittesting
+      (tape)
+      np_tape
       ;;
 
       (binary)
       np_binary
       ;;
 
-      (coverage)
-      np_coverage
+      (nyc)
+      np_nyc
       ;;
     esac
     ;;
@@ -183,7 +183,7 @@ np_configurePackageJson () {
   "
 }
 
-np_unittesting () {
+np_tape () {
   mkdir source/test
 
   {
@@ -234,7 +234,7 @@ np_binary () {
   "
 }
 
-np_coverage () {
+np_nyc () {
   DEV_DEPENDENCIES_COVERAGE="nyc"
 
   if ($USE_YARN)
