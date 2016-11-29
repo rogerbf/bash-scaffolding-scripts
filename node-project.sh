@@ -36,6 +36,10 @@ node-project () {
       (nyc)
       np_nyc
       ;;
+
+      (jest)
+      np_jest
+      ;;
     esac
     ;;
 
@@ -256,4 +260,50 @@ np_nyc () {
     echo '.nyc_output'
     echo 'coverage'
   } >> .gitignore
+}
+
+np_jest () {
+  mkdir source/__test__
+
+  echo 'coverage' >> .gitignore
+
+  {
+    echo 'import '"$PROJECTNAME"' from '"'../index'"
+    echo ''
+    echo 'test(`'"$PROJECTNAME"' is defined`, () => {'
+    echo '  expect('"$PROJECTNAME"').toBeTruthy()'
+    echo '})'
+  } >> source/__test__/index.test.js
+
+  DEV_DEPENDENCIES_UNITTESTS="jest-cli babel-jest"
+
+  if ($USE_YARN)
+  then
+    yarn add $DEV_DEPENDENCIES_UNITTESTS --dev
+  else
+    npm i --save-dev $DEV_DEPENDENCIES_UNITTESTS
+  fi
+
+  {
+    echo '{'
+    echo '  "testEnvironment": "node"'
+    echo '}'
+  } >> .jest
+
+  node -e "
+  const fs = require('fs')
+  const package = JSON.parse(fs.readFileSync('./package.json'))
+  package.scripts['test'] = 'jest --config .jest'
+  package.scripts['watch:test'] = 'jest --config .jest --watch'
+  package.scripts['coverage'] = 'jest --config .jest --coverage'
+  package.scripts['watch:coverage'] = 'jest --config .jest --coverage --watch'
+  fs.writeFileSync('./package.json', JSON.stringify(package, null, 2))
+  "
+
+  node -e "
+  const fs = require('fs')
+  const eslintrc = JSON.parse(fs.readFileSync('./.eslintrc.json'))
+  eslintrc.env.jest = true
+  fs.writeFileSync('./.eslintrc.json', JSON.stringify(eslintrc, null, 2))
+  "
 }
