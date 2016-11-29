@@ -251,8 +251,8 @@ np_nyc () {
   node -e "
   const fs = require('fs')
   const package = JSON.parse(fs.readFileSync('./package.json'))
-  package.scripts['test:coverage'] = 'nyc --reporter=lcov --require babel-register npm test && nyc report'
-  package.scripts['watch:test:coverage'] = 'onchange \"source/*.js\" \"source/**/*.js\" -- npm run test:coverage'
+  package.scripts['coverage'] = 'nyc --reporter=lcov --require babel-register npm test && nyc report'
+  package.scripts['watch:coverage'] = 'onchange \"source/*.js\" \"source/**/*.js\" -- npm run test:coverage'
   fs.writeFileSync('./package.json', JSON.stringify(package, null, 2))
   "
 
