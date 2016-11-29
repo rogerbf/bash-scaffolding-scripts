@@ -156,7 +156,7 @@ np_addTernConfig () {
 np_installDependencies () {
   DEV_DEPENDENCIES_BABEL='babel-cli babel-preset-latest babel-preset-stage-3 babel-plugin-add-module-exports'
   DEV_DEPENDENCIES_ESLINT='eslint eslint-config-standard eslint-plugin-promise eslint-plugin-standard'
-  DEV_DEPENDENCIES_OTHER='rimraf onchange cross-env snyk'
+  DEV_DEPENDENCIES_OTHER='rimraf chokidar-cli cross-env snyk'
 
   if ($USE_YARN)
   then
@@ -178,7 +178,7 @@ np_configurePackageJson () {
   package.scripts['build'] = 'cross-env BABEL_ENV=production babel --out-dir distribution source'
   package.scripts['prepublish'] = 'npm run snyk && npm run build'
   package.scripts['start'] = 'npm run build && node ./distribution/index.js'
-  package.scripts['watch:start'] = 'onchange \"source/*.js\" \"source/**/*.js\" -- npm run start'
+  package.scripts['watch:start'] = 'chokidar \"source/*.js\" \"source/**/*.js\" -c \"npm run start\"'
   package.scripts['eslint'] = 'eslint source'
   package.scripts['eslint:fix'] = 'eslint --fix source'
   package.scripts['repl'] = 'npm run build && babel-node'
@@ -214,7 +214,7 @@ np_tape () {
   const fs = require('fs')
   const package = JSON.parse(fs.readFileSync('./package.json'))
   package.scripts['test'] = 'tape -r babel-register ./source/**/*.test.js | tap-dot'
-  package.scripts['watch:test'] = 'onchange \"source/*.js\" \"source/**/*.js\" -- npm run test'
+  package.scripts['watch:test'] = 'chokidar \"source/*.js\" \"source/**/*.js\" -c \"npm run test\"'
   fs.writeFileSync('./package.json', JSON.stringify(package, null, 2))
   "
 }
@@ -252,7 +252,7 @@ np_nyc () {
   const fs = require('fs')
   const package = JSON.parse(fs.readFileSync('./package.json'))
   package.scripts['coverage'] = 'nyc --reporter=lcov --require babel-register npm test && nyc report'
-  package.scripts['watch:coverage'] = 'onchange \"source/*.js\" \"source/**/*.js\" -- npm run coverage'
+  package.scripts['watch:coverage'] = 'chokidar \"source/*.js\" \"source/**/*.js\" -c \"npm run coverage\"'
   fs.writeFileSync('./package.json', JSON.stringify(package, null, 2))
   "
 
