@@ -13,6 +13,12 @@ node-project () {
     echo 'enter project name:'
     read PROJECTNAME
 
+    JS_SAFE_NAME=$(PROJECTNAME=$PROJECTNAME node -e "
+    process.stdout.write(
+    process.env.PROJECTNAME.replace(/-\w/g, match => match.slice(-1).toUpperCase())
+    )
+    ")
+
     np_addFilesAndFolders
     np_addGitIgnore
     npm init -y
@@ -192,10 +198,10 @@ np_tape () {
 
   {
     echo 'import test from '"'tape'"
-    echo 'import '"$PROJECTNAME"' from '"'../index'"
+    echo 'import '"$JS_SAFE_NAME"' from '"'../index'"
     echo ''
-    echo 'test(`'"$PROJECTNAME"'`, assert => {'
-    echo '  assert.ok('"$PROJECTNAME"', `exports something`)'
+    echo 'test(`'"$JS_SAFE_NAME"'`, assert => {'
+    echo '  assert.ok('"$JS_SAFE_NAME"', `exports something`)'
     echo '  assert.end()'
     echo '})'
     echo ''
@@ -268,10 +274,10 @@ np_jest () {
   echo 'coverage' >> .gitignore
 
   {
-    echo 'import '"$PROJECTNAME"' from '"'../index'"
+    echo 'import '"$JS_SAFE_NAME"' from '"'../index.js'"
     echo ''
-    echo 'test(`'"$PROJECTNAME"' is defined`, () => {'
-    echo '  expect('"$PROJECTNAME"').toBeTruthy()'
+    echo 'test(`'"$JS_SAFE_NAME"' is defined`, () => {'
+    echo '  expect('"$JS_SAFE_NAME"').toBeDefined()'
     echo '})'
   } >> source/__test__/index.test.js
 
