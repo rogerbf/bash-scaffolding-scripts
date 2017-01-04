@@ -269,17 +269,15 @@ np_nyc () {
 }
 
 np_jest () {
-  mkdir source/__test__
-
   echo 'coverage' >> .gitignore
 
   {
-    echo 'import '"$JS_SAFE_NAME"' from '"'../index.js'"
+    echo 'import '"$JS_SAFE_NAME"' from '"'./index'"
     echo ''
     echo 'test(`'"$JS_SAFE_NAME"' is defined`, () => {'
     echo '  expect('"$JS_SAFE_NAME"').toBeDefined()'
     echo '})'
-  } >> source/__test__/index.test.js
+  } >> source/index.test.js
 
   DEV_DEPENDENCIES_UNITTESTS="jest-cli babel-jest"
 
