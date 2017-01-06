@@ -31,11 +31,11 @@ basic-node () {
     (add)
     case $2 in
       (binary)
-      np_binary
+      nb_binary
       ;;
 
       (jest)
-      np_jest
+      nb_jest
       ;;
     esac
     ;;
@@ -139,7 +139,7 @@ nb_configurePackageJson () {
   "
 }
 
-np_binary () {
+nb_binary () {
   mkdir binary
 
   {
@@ -158,7 +158,7 @@ np_binary () {
   "
 }
 
-np_jest () {
+nb_jest () {
   echo 'coverage' >> .gitignore
   echo 'coverage' >> .npmignore
 
