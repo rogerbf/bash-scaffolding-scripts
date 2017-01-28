@@ -188,7 +188,7 @@ np_configurePackageJson () {
   package.scripts['eslint'] = 'eslint source'
   package.scripts['eslint:fix'] = 'eslint --fix source'
   package.scripts['repl'] = 'npm run build && babel-node'
-  package.scripts['nsp'] = 'nsp test'
+  package.scripts['nsp'] = 'nsp check'
   fs.writeFileSync('./package.json', JSON.stringify(package, null, 2))
   "
 }
