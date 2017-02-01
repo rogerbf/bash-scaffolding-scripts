@@ -152,7 +152,7 @@ nb_binary () {
   const package = JSON.parse(fs.readFileSync('./package.json'))
   Object.assign(
     package,
-    { binary: { [package.name]: './binary/cli.js' } }
+    { bin: { [package.name]: './binary/cli.js' } }
   )
   fs.writeFileSync('./package.json', JSON.stringify(package, null, 2))
   "
