@@ -66,6 +66,7 @@ nb_addGitIgnore () {
     echo 'package'
     echo $PROJECTNAME'*.tgz'
     echo 'npm-debug.log'
+    echo '.vscode'
   } >> .gitignore
 }
 
