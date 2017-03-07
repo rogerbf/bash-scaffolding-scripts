@@ -1,0 +1,26 @@
+tern-project () {
+  {
+    echo '{'
+    echo '  "ecmaVersion": 7,'
+    echo '  "libs": [ "ecmascript" ],'
+    echo '  "loadEagerly": ['
+    echo '    "source"'
+    echo '  ],'
+    echo '  "dontLoad": ['
+    echo '    "distribution",'
+    echo '    "node_modules"'
+    echo '  ],'
+    echo '  "plugins": {'
+    echo '    "complete_strings": {'
+    echo '      "maxLength": 15'
+    echo '    },'
+    echo '    "node": {},'
+    echo '    "es_modules": {},'
+    echo '    "doc_comment": {'
+    echo '      "fullDocs": true,'
+    echo '      "strong": true'
+    echo '    }'
+    echo '  }'
+    echo '}'
+  } >> .tern-project
+}

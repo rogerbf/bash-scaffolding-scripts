@@ -1,0 +1,3 @@
+readme () {
+  echo '# '$1 >> README.md
+}
