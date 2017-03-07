@@ -4,7 +4,7 @@ jest () {
   source $DIR/dependencies.sh
   source $DIR/install-packages.sh
 
-  install-packages "$JEST"
+  install-packages "$JEST_DEPENDENCIES"
 
   echo 'coverage' >> .gitignore
 
