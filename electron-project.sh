@@ -468,6 +468,6 @@ ep_configureApplicationPackageJson () {
 
   delete package['scripts']
 
-  fs.writeFileSync('./package.json', JSON.stringify(sortedPackage, null, 2))
+  fs.writeFileSync('./package.json', JSON.stringify(package, null, 2))
   "
 }
