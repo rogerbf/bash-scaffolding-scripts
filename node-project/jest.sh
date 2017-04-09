@@ -34,6 +34,7 @@ jest () {
   package.scripts['test'] = 'jest --config .jest'
   package.scripts['watch:test'] = 'jest --config .jest --watch'
   package.scripts['coverage'] = 'jest --config .jest --coverage'
+  package.scripts['coverage:open'] = 'open ./coverage/lcov-report/index.html'
   package.scripts['watch:coverage'] = 'jest --config .jest --coverage --watch'
   fs.writeFileSync('./package.json', JSON.stringify(package, null, 2))
   "
