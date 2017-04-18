@@ -48,6 +48,12 @@ node-project () {
       echo 'done'
       ;;
 
+      (prettier)
+      echo 'adding prettier'
+      source $DIR/prettier.sh
+      prettier
+      echo 'done'
+
     esac
     ;;
 
