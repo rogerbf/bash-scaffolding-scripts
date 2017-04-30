@@ -1,6 +1,7 @@
 eslintrc () {
   {
     echo '{'
+    echo '  "parser": "babel-eslint",'
     echo '  "extends": "standard",'
     echo '  "env": {'
     echo '    "node": true'
