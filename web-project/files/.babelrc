@@ -1,0 +1,25 @@
+{
+  "presets": [
+    "stage-3",
+    [
+      "env",
+      {
+        "targets": {
+          "browsers": [
+            "last 2 versions",
+            "> 5%"
+          ]
+        },
+        "modules": false
+      }
+    ]
+  ],
+  "plugins": [
+    "external-helpers"
+  ],
+  "env": {
+    "production": {
+      "comments": false
+    }
+  }
+}

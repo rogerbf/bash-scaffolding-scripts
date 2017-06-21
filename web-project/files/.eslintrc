@@ -1,0 +1,25 @@
+{
+  "extends": "standard",
+  "plugins": [
+    "html",
+    "compat"
+  ],
+  "env": {
+    "browser": true
+  },
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true
+    }
+  },
+  "rules": {
+    "quotes": [
+      "error",
+      "backtick"
+    ],
+    "compat/compat": 2
+  }
+}
