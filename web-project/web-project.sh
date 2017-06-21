@@ -10,7 +10,7 @@ web-project () {
     mkdir $PROJECTNAME
     cd $PROJECTNAME
     echo '# '$PROJECTNAME >> README.md
-    cp -R $DIR/files/*.* .
+    cp -R $DIR/files/ .
     npm init -y
     npm install --save-dev babel-eslint babel-plugin-external-helpers babel-preset-env babel-preset-stage-3 budo chokidar-cli cross-env cssnano eslint eslint-config-standard eslint-plugin-compat eslint-plugin-html eslint-plugin-import eslint-plugin-node eslint-plugin-promise eslint-plugin-standard html-minifier postcss-cssnext postcss-import rollup rollup-plugin-babel rollup-plugin-commonjs rollup-plugin-execute rollup-plugin-node-resolve rollup-plugin-postcss rollup-plugin-replace rollup-plugin-uglify
     node -e "
