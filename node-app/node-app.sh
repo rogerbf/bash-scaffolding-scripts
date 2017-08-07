@@ -1,4 +1,4 @@
-node-module () {
+node-app () {
   echo 'Enter project name:'
   read PROJECTNAME
 
@@ -11,7 +11,7 @@ node-module () {
 
   npm init -y
 
-  npm install --save-dev babel-eslint babel-plugin-external-helpers babel-preset-env babel-preset-stage-3 prettier-standard rollup rollup-plugin-babel nsp
+  npm install --save-dev babel-eslint eslint-config-standard eslint-plugin-standard eslint-plugin-promise eslint-plugin-import eslint-plugin-node babel-plugin-external-helpers babel-preset-env babel-preset-stage-3 prettier-standard rollup rollup-plugin-babel nsp
 
   echo '# '$PROJECTNAME >> README.md
   echo 'export default `'$PROJECTNAME'`' >> source/main.js
