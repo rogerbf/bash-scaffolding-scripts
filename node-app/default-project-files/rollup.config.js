@@ -10,7 +10,9 @@ export default Object.assign(
     ],
     plugins: [
       babel({ exclude: `node_modules/**` })
+    ],
+    external: [
+      ...Object.keys(dependencies || {})
     ]
-  },
-  dependencies ? { external: Object.keys(dependencies) } : {},
+  }
 )
