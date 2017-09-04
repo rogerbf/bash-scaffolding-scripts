@@ -3,16 +3,16 @@ import babel from 'rollup-plugin-babel'
 
 export default Object.assign(
   {
-    entry: `source/main.js`,
-    targets: [
-      { dest: cjs, format: `cjs` },
-      { dest: esm, format: `es` },
+    input: `source/main.js`,
+    output: [
+      { file: cjs, format: `cjs` },
+      { file: esm, format: `es` },
     ],
     plugins: [
       babel({ exclude: `node_modules/**` })
     ],
     external: [
-      ...Object.keys(dependencies || {})
+      ...Object.keys(dependencies || [])
     ]
   }
 )
