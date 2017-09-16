@@ -1,6 +1,9 @@
 node-app () {
-  echo 'Enter project name:'
+  echo 'Project name:'
   read PROJECTNAME
+
+  echo 'Authors full name:'
+  read AUTHOR
 
   DIR="${BASH_SOURCE%/*}"
 
@@ -11,20 +14,33 @@ node-app () {
 
   npm init -y
 
-  npm install --save-dev babel-eslint eslint-config-standard eslint-plugin-standard eslint-plugin-promise eslint-plugin-import eslint-plugin-node babel-plugin-external-helpers babel-preset-env babel-preset-stage-3 prettier-standard rollup rollup-plugin-babel nsp
+  ESLINT="babel-eslint eslint-config-standard eslint-plugin-standard eslint-plugin-promise eslint-plugin-import eslint-plugin-node"
+  BABEL="babel-cli babel-plugin-add-module-exports babel-preset-env babel-preset-stage-3"
+  OTHER="nsp prettier-standard"
+
+  npm install --save-dev $ESLINT $BABEL $OTHER
 
   echo '# '$PROJECTNAME >> README.md
-  echo 'export default `'$PROJECTNAME'`' >> source/main.js
+  echo 'export default `'$PROJECTNAME'`' >> source/index.js
 
   node -e "
   const package = JSON.parse(fs.readFileSync('./package.json'))
-  package.main = './build/' + package.name + '.cjs.js'
-  package.module = './build/' + package.name + '.esm.js'
-  package.files = ['build', 'README.md']
-  package.scripts['build'] = 'rollup -c'
-  package.scripts['prepublish'] = 'npm run lint && npm run format && nsp check && npm run build'
+  package.main = 'build/index.js'
+  package.module = 'source/index.js'
+  package.files = [ 'LICENSE', 'README.md', 'source', 'build' ]
+  package.scripts['build'] = 'babel source --out-dir build'
+  package.scripts['prepublish'] = 'npm run format && npm run lint && nsp check && npm run build'
   package.scripts['lint'] = 'eslint source'
   package.scripts['format'] = 'prettier-standard \"source/**/*.js\"'
   fs.writeFileSync('./package.json', JSON.stringify(package, null, 2))
+  "
+
+  AUTHOR=$AUTHOR node -e "
+  fs.writeFileSync(
+    './LICENSE',
+    fs.readFileSync('./LICENSE', 'utf8')
+      .replace('[fullname]', process.env.AUTHOR)
+      .replace('[year]', (new Date()).getFullYear())
+  )
   "
 }

@@ -1,14 +1,16 @@
 {
   "presets": [
-    [ "env", {
-      "targets": {
-        "node": "current"
-      },
-      "modules": false
-    } ],
+    [
+      "env",
+      {
+        "targets": {
+          "node": "current"
+        }
+      }
+    ],
     "stage-3"
   ],
   "plugins": [
-    "external-helpers"
+    "add-module-exports"
   ]
 }
