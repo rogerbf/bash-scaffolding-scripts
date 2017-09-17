@@ -15,7 +15,7 @@ node-app () {
   npm init -y
 
   ESLINT="babel-eslint eslint-config-standard eslint-plugin-standard eslint-plugin-promise eslint-plugin-import eslint-plugin-node"
-  BABEL="babel-cli babel-plugin-add-module-exports babel-preset-env babel-preset-stage-3"
+  BABEL="babel-cli babel-plugin-add-module-exports babel-preset-env babel-preset-stage-3 babel-plugin-dynamic-import-node"
   OTHER="nsp prettier-standard"
 
   npm install --save-dev $ESLINT $BABEL $OTHER
