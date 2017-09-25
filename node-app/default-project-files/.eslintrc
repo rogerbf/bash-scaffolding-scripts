@@ -21,6 +21,10 @@
       "warn",
       "always"
     ],
+    "template-curly-spacing": [
+      "warn",
+      "always"
+    ],
     "indent": [
       "error",
       2,
